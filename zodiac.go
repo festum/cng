@@ -1,7 +1,7 @@
-package fate
+package cng
 
 import (
-	"github.com/godcong/chronos"
+	"github.com/festum/chronos"
 	"strings"
 )
 

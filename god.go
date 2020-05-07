@@ -1,7 +1,6 @@
-package fate
+package cng
 
-// LikeUseGod ...
-type LikeUseGod struct {
+type LikeUseGod struct { //FIXME: WTF?
 	LikeGod string //喜神
 	UseGod  string //用神
 	Gold    string //五行:金

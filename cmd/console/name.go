@@ -3,9 +3,9 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/godcong/chronos"
-	"github.com/godcong/fate"
-	"github.com/godcong/fate/config"
+	"github.com/festum/chronos"
+	"github.com/festum/cng"
+	"github.com/festum/cng/config"
 	"github.com/goextension/log"
 	"github.com/spf13/cobra"
 	"time"

@@ -1,17 +1,22 @@
-module github.com/godcong/fate
+module github.com/festum/cng
+
+go 1.14
 
 require (
-	github.com/go-sql-driver/mysql v1.4.1
-	github.com/godcong/chronos v0.0.3
-	github.com/godcong/yi v1.0.2
+	github.com/caarlos0/env v3.5.0+incompatible
+	github.com/festum/chronos v0.0.4
+	github.com/festum/yi v1.0.3
+	github.com/go-sql-driver/mysql v1.5.0
+	github.com/godcong/yi v1.0.2 // indirect
 	github.com/goextension/log v0.0.2
 	github.com/google/uuid v1.1.1
-	github.com/rakyll/statik v0.1.6
+	github.com/rakyll/statik v0.1.7
 	github.com/spf13/cobra v0.0.5
 	github.com/xormsharp/builder v0.3.6
 	github.com/xormsharp/xorm v1.0.0
-	go.uber.org/zap v1.13.0
-	golang.org/x/crypto v0.0.0-20190605123033-f99c8df09eb5 // indirect
+	go.uber.org/zap v1.15.0
+	golang.org/x/lint v0.0.0-20200302205851-738671d3881b // indirect
+	golang.org/x/tools v0.0.0-20200507192325-6441d34c3f03 // indirect
+	google.golang.org/appengine v1.6.6 // indirect
+	honnef.co/go/tools v0.0.1-2020.1.3 // indirect
 )
-
-go 1.13

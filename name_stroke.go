@@ -1,4 +1,4 @@
-package fate
+package cng
 
 // NameStroke ...
 type NameStroke struct {

@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/godcong/fate"
-	"github.com/godcong/fate/config"
+	"github.com/festum/cng"
+	"github.com/festum/cng/config"
 	"github.com/xormsharp/xorm"
 )
 

@@ -1,9 +1,9 @@
-package fate
+package cng
 
 import "github.com/xormsharp/xorm"
 
 const sanCai = "水木木火火土土金金水"
-const yinYang = "阴阳"
+const yinYang = "陰陽"
 
 // SanCai ...
 type SanCai struct {
@@ -14,10 +14,10 @@ type SanCai struct {
 	diCai          string `bson:"di_cai"`
 	diCaiYingYang  string `bson:"di_cai_ying_yang"`
 	fortune        string `bson:"fortune"` //吉凶
-	comment        string `bson:"comment"` //说明
+	comment        string `bson:"comment"` //說明
 }
 
-//NewSanCai 新建一个三才对象
+//NewSanCai 新建一個三才物件
 func NewSanCai(tian, ren, di int) *SanCai {
 	return &SanCai{
 		tianCai:        sanCaiAttr(tian),
@@ -29,7 +29,7 @@ func NewSanCai(tian, ren, di int) *SanCai {
 	}
 }
 
-//Check 检查三才属性
+//Check 檢查三才屬性
 func Check(engine *xorm.Engine, cai *SanCai, point int) bool {
 	wx := FindWuXing(engine, cai.tianCai, cai.renCai, cai.diCai)
 	if wx.Luck.Point() >= point {
@@ -38,8 +38,8 @@ func Check(engine *xorm.Engine, cai *SanCai, point int) bool {
 	return false
 }
 
-// GenerateThreeTalent 计算字符的三才属性
-// 1-2木：1为阳木，2为阴木   3-4火：3为阳火，4为阴火   5-6土：5为阳土，6为阴土   7-8金：7为阳金，8为阴金   9-10水：9为阳水，10为阴水
+// GenerateThreeTalent 計算字元的三才屬性
+// 1-2木：1為陽木，2為陰木   3-4火：3為陽火，4為陰火   5-6土：5為陽土，6為陰土   7-8金：7為陽金，8為陰金   9-10水：9為陽水，10為陰水
 func sanCaiAttr(i int) string {
 	return string([]rune(sanCai)[i%10])
 }

@@ -1,14 +1,14 @@
-package fate
+package cng
 
-//Strokes 推荐笔画数
+//Strokes 推薦筆畫數
 type Strokes struct {
-	SimplifiedChinese  int //简体中文
-	TraditionalChinese int //繁体中文
+	SimplifiedChinese  int //簡體中文
+	TraditionalChinese int //繁體中文
 	KangxiDictionary   int //康熙字典
-	GodBook            int //神册
+	GodBook            int //神冊
 }
 
-//FindCharacterStrokes 通过文字查询推荐笔画数
+//FindCharacterStrokes 通過文字查詢推薦筆畫數
 func FindCharacterStrokes(char string) int {
 	//TODO:find
 	s := &Strokes{}

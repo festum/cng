@@ -1,43 +1,41 @@
-package fate
+package cng
 
 import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/godcong/fate/config"
-	"github.com/goextension/log"
-	"github.com/xormsharp/xorm"
 	"strings"
 	"time"
 
-	"github.com/godcong/chronos"
-	"github.com/godcong/yi"
+	"github.com/goextension/log"
+	"github.com/xormsharp/xorm"
+	"github.com/festum/chronos"
+	"github.com/festum/yi"
+	"github.com/festum/cng/config"
+	"github.com/festum/cng/logger"
 )
 
-// HandleOutputFunc ...
+var _logger = logger.NewLogger()
+
 type HandleOutputFunc func(name Name)
 
-// Sex ...
-type Sex bool
+type Sex bool //FIXME: WTF? should be gender
 
-// SexBoy ...
 const (
-	SexBoy  Sex = false
-	SexGirl Sex = true
+	_male  Sex = false //FIXME: should be enum int
+	_femail Sex = true
 )
 
-// HelpContent ...
-const HelpContent = "正在使用Fate生成姓名列表，如遇到问题请访问项目地址：https://github.com/godcong/fate获取帮助!"
+const HelpContent = "正在使用Fate生成姓名列表，如遇到問題請訪問項目地址：https://github.com/godcong/fate獲取幫助!"
 
-// Fate ...
-type Fate interface {
+type Fate interface { //FIXME: nonsense interface
 	MakeName(ctx context.Context) (e error)
 	XiYong() *XiYong
 	RunInit() (e error)
 	RegisterHandle(outputFunc HandleOutputFunc)
 }
 
-type fateImpl struct {
+type fateImpl struct { //FIXME: simplify it
 	config   *config.Config
 	db       Database
 	out      Information
@@ -65,7 +63,7 @@ func (f *fateImpl) RunInit() (e error) {
 		for la := range lucky {
 			_, e = f.db.InsertOrUpdateWuGeLucky(la)
 			if e != nil {
-				return Wrap(e, "insert failed")
+				return errorWith(e, "insert failed")
 			}
 		}
 	}
@@ -96,7 +94,6 @@ func Debug() Options {
 	}
 }
 
-//NewFate 所有的入口,新建一个fate对象
 func NewFate(lastName string, born time.Time, options ...Options) Fate {
 	f := &fateImpl{
 		last: strings.Split(lastName, ""),
@@ -141,25 +138,24 @@ func (f *fateImpl) getLastCharacter() error {
 	return nil
 }
 
-// MakeName ...
 func (f *fateImpl) MakeName(ctx context.Context) (e error) {
 	log.Info(HelpContent)
 	e = f.out.Head(f.config.FileOutput.Heads...)
 	if e != nil {
-		return Wrap(e, "write head failed")
+		return errorWith(e, "write head failed")
 	}
 	e = f.RunInit()
 	if e != nil {
-		return Wrap(e, "init failed")
+		return errorWith(e, "init failed")
 	}
 	n, e := f.db.CountWuGeLucky()
 	if e != nil || n == 0 {
-		return Wrap(e, "count total error")
+		return errorWith(e, "count total error")
 	}
 
 	e = f.getLastCharacter()
 	if e != nil {
-		return Wrap(e, "get char failed")
+		return errorWith(e, "get char failed")
 	}
 	name := make(chan *Name)
 	go func() {
@@ -209,7 +205,7 @@ func (f *fateImpl) MakeName(ctx context.Context) (e error) {
 			return err
 		}
 		if f.debug {
-			log.Infow(n.String(), "笔画", n.Strokes(), "拼音", n.PinYin(), "八字", f.born.Lunar().EightCharacter(), "喜用神", f.XiYong().Shen(), "本卦", ben.GuaMing, "变卦", bian.GuaMing)
+			log.Infow(n.String(), "筆畫", n.Strokes(), "拼音", n.PinYin(), "八字", f.born.Lunar().EightCharacter(), "喜用神", f.XiYong().Shen(), "本卦", ben.GuaMing, "變卦", bian.GuaMing)
 		}
 	}
 	return nil
@@ -236,7 +232,7 @@ func (f *fateImpl) init() {
 	f.out = initOutputWithConfig(f.config.FileOutput)
 }
 
-//SetBornData 设定生日
+//SetBornData 設定生日
 func (f *fateImpl) SetBornData(t time.Time) {
 	f.born = chronos.New(t)
 }
@@ -285,7 +281,7 @@ func (f *fateImpl) getWugeName(name chan<- *Name) (e error) {
 		}
 
 		if e != nil {
-			return Wrap(e, "first stroke1 error")
+			return errorWith(e, "first stroke1 error")
 		}
 
 		if f.config.Regular {
@@ -295,7 +291,7 @@ func (f *fateImpl) getWugeName(name chan<- *Name) (e error) {
 		}
 
 		if e != nil {
-			return Wrap(e, "first stoke2 error")
+			return errorWith(e, "first stoke2 error")
 		}
 
 		for _, f1 := range f1s {

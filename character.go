@@ -1,40 +1,39 @@
-package fate
+package cng
 
 import (
 	"crypto/sha256"
 	"fmt"
+
 	"github.com/xormsharp/builder"
 	"github.com/xormsharp/xorm"
 )
 
-//Character 字符
 type Character struct {
 	Hash                     string   `xorm:"pk hash"`
 	PinYin                   []string `xorm:"default() notnull pin_yin"`                               //拼音
-	Ch                       string   `xorm:"default() notnull ch"`                                    //字符
-	ScienceStroke            int      `xorm:"default(0) notnull science_stroke" json:"science_stroke"` //科学笔画
+	Ch                       string   `xorm:"default() notnull ch"`                                    //字元
+	ScienceStroke            int      `xorm:"default(0) notnull science_stroke" json:"science_stroke"` //科學筆畫
 	Radical                  string   `xorm:"default() notnull radical"`                               //部首
-	RadicalStroke            int      `xorm:"default(0) notnull radical_stroke"`                       //部首笔画
-	Stroke                   int      `xorm:"default() notnull stroke"`                                //总笔画数
+	RadicalStroke            int      `xorm:"default(0) notnull radical_stroke"`                       //部首筆畫
+	Stroke                   int      `xorm:"default() notnull stroke"`                                //總筆畫數
 	IsKangXi                 bool     `xorm:"default(0) notnull is_kang_xi"`                           //是否康熙字典
 	KangXi                   string   `xorm:"default() notnull kang_xi"`                               //康熙
-	KangXiStroke             int      `xorm:"default(0) notnull kang_xi_stroke"`                       //康熙笔画
-	SimpleRadical            string   `xorm:"default() notnull simple_radical"`                        //简体部首
-	SimpleRadicalStroke      int      `xorm:"default(0) notnull simple_radical_stroke"`                //简体部首笔画
-	SimpleTotalStroke        int      `xorm:"default(0) notnull simple_total_stroke"`                  //简体笔画
-	TraditionalRadical       string   `xorm:"default() notnull traditional_radical"`                   //繁体部首
-	TraditionalRadicalStroke int      `xorm:"default(0) notnull traditional_radical_stroke"`           //繁体部首笔画
-	TraditionalTotalStroke   int      `xorm:"default(0) notnull traditional_total_stroke"`             //简体部首笔画
-	NameScience              bool     `xorm:"default(0) notnull name_science"`                         //姓名学
+	KangXiStroke             int      `xorm:"default(0) notnull kang_xi_stroke"`                       //康熙筆畫
+	SimpleRadical            string   `xorm:"default() notnull simple_radical"`                        //簡體部首
+	SimpleRadicalStroke      int      `xorm:"default(0) notnull simple_radical_stroke"`                //簡體部首筆畫
+	SimpleTotalStroke        int      `xorm:"default(0) notnull simple_total_stroke"`                  //簡體筆畫
+	TraditionalRadical       string   `xorm:"default() notnull traditional_radical"`                   //繁體部首
+	TraditionalRadicalStroke int      `xorm:"default(0) notnull traditional_radical_stroke"`           //繁體部首筆畫
+	TraditionalTotalStroke   int      `xorm:"default(0) notnull traditional_total_stroke"`             //簡體部首筆畫
+	NameScience              bool     `xorm:"default(0) notnull name_science"`                         //姓名學
 	WuXing                   string   `xorm:"default() notnull wu_xing"`                               //五行
 	Lucky                    string   `xorm:"default() notnull lucky"`                                 //吉凶寓意
 	Regular                  bool     `xorm:"default(0) notnull regular"`                              //常用
-	TraditionalCharacter     []string `xorm:"default() notnull traditional_character"`                 //繁体字
-	VariantCharacter         []string `xorm:"default() notnull variant_character"`                     //异体字
-	Comment                  []string `xorm:"default() notnull comment"`                               //解释
+	TraditionalCharacter     []string `xorm:"default() notnull traditional_character"`                 //繁體字
+	VariantCharacter         []string `xorm:"default() notnull variant_character"`                     //異體字
+	Comment                  []string `xorm:"default() notnull comment"`                               //解釋
 }
 
-// InsertOrUpdateCharacter ...
 func InsertOrUpdateCharacter(engine *xorm.Engine, c *Character) (i int64, e error) {
 	tmp := new(Character)
 	b, e := engine.Where("hash = ?", Hash(c.Ch)).Get(tmp)
@@ -69,17 +68,14 @@ func getCharacter(eng *xorm.Engine, fn func(engine *xorm.Engine) *xorm.Session) 
 	return nil, fmt.Errorf("character get error:%w", e)
 }
 
-// CharacterOptions ...
 type CharacterOptions func(session *xorm.Session) *xorm.Session
 
-// Regular ...
 func Regular() CharacterOptions {
 	return func(session *xorm.Session) *xorm.Session {
 		return session.And("regular = ?", 1)
 	}
 }
 
-// Stoker ...
 func Stoker(s int, options ...CharacterOptions) func(engine *xorm.Engine) *xorm.Session {
 	return func(engine *xorm.Engine) *xorm.Session {
 		session := engine.Where("pin_yin IS NOT NULL").
@@ -96,7 +92,6 @@ func Stoker(s int, options ...CharacterOptions) func(engine *xorm.Engine) *xorm.
 
 }
 
-// Char ...
 func Char(name string) func(engine *xorm.Engine) *xorm.Session {
 	return func(engine *xorm.Engine) *xorm.Session {
 		return engine.Where(builder.Eq{"ch": name}.
@@ -105,7 +100,6 @@ func Char(name string) func(engine *xorm.Engine) *xorm.Session {
 	}
 }
 
-// Hash ...
 func Hash(url string) string {
 	sum256 := sha256.Sum256([]byte(url))
 	return fmt.Sprintf("%x", sum256)

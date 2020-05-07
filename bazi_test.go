@@ -1,10 +1,11 @@
-package fate_test
+package cng_test
 
 import (
-	"github.com/godcong/chronos"
-	"github.com/godcong/fate"
 	"log"
 	"testing"
+
+	"github.com/festum/chronos"
+	"github.com/festum/cng"
 )
 
 func TestPoint(t *testing.T) {

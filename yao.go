@@ -1,6 +1,6 @@
-package fate
+package cng
 
-import "github.com/godcong/yi"
+import "github.com/festum/yi"
 
 // GuaYao ...
 type GuaYao struct {

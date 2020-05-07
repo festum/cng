@@ -1,14 +1,15 @@
-package fate
+package cng
 
 import (
 	"errors"
+
 	"github.com/xormsharp/xorm"
 )
 
 // Luck ...
 type Luck int
 
-var luckPoint = []string{"大凶", "凶", "凶多于吉", "吉凶参半", "吉多于凶", "吉", "大吉"}
+var luckPoint = []string{"大凶", "凶", "凶多於吉", "吉凶參半", "吉多於凶", "吉", "大吉"}
 
 // Point ...
 func (l *Luck) Point() int {

@@ -1,4 +1,4 @@
-package fate
+package cng
 
 //XiYong 喜用神
 type XiYong struct {

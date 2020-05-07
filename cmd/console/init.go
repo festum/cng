@@ -3,7 +3,7 @@ package main
 import (
 	"errors"
 	"fmt"
-	"github.com/godcong/fate/config"
+	"github.com/festum/cng/config"
 	"github.com/spf13/cobra"
 	"io"
 	"log"

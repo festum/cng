@@ -1,4 +1,4 @@
-package fate
+package cng
 
 import "testing"
 

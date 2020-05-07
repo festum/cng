@@ -1,7 +1,7 @@
-package fate
+package cng
 
 import (
-	"github.com/godcong/yi"
+	"github.com/festum/yi"
 )
 
 //QiGua 起卦

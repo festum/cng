@@ -1,17 +1,17 @@
-package fate
+package cng
 
 import (
 	"bufio"
 	"encoding/csv"
 	"encoding/json"
 	"fmt"
-	"github.com/godcong/fate/config"
+	"os"
+
+	"github.com/festum/cng/config"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
-	"os"
 )
 
-// Information ...
 type Information interface {
 	Group(b bool)
 	Write(names ...Name) error
@@ -25,7 +25,6 @@ type jsonInformation struct {
 	file *os.File
 }
 
-// Group ...
 func (j *jsonInformation) Group(b bool) {
 	panic("implement me")
 }
@@ -47,12 +46,10 @@ type csvInformation struct {
 	file *os.File
 }
 
-// Group ...
 func (c *csvInformation) Group(b bool) {
 	panic("implement me")
 }
 
-// Finish ...
 func (l *logInformation) Finish() error {
 	return l.sugar.Sync()
 }
@@ -103,7 +100,6 @@ func jsonOutput(path string) Information {
 	}
 }
 
-// Write ...
 func (l *logInformation) Write(names ...Name) error {
 	for _, n := range names {
 		out := headNameOutput(l.head, n, func(s string) bool {
@@ -114,11 +110,11 @@ func (l *logInformation) Write(names ...Name) error {
 	return nil
 }
 
-// Head ...
 func (l *logInformation) Head(heads ...string) error {
 	l.head = heads
 	return nil
 }
+
 func logOutput(path string) Information {
 	cfg := zap.NewProductionConfig()
 
@@ -204,7 +200,7 @@ func headNameOutput(heads []string, name Name, skip func(string) bool) (out []in
 		switch h {
 		case "姓名":
 			out = append(out, h, name.String())
-		case "笔画":
+		case "筆畫":
 			out = append(out, h, name.Strokes())
 		case "拼音":
 			out = append(out, h, name.PinYin())
@@ -226,7 +222,7 @@ func headNameJSONOutput(heads []string, name Name, skip func(string) bool) (b []
 		switch h {
 		case "姓名":
 			out[h] = name.String()
-		case "笔画":
+		case "筆畫":
 			out[h] = name.Strokes()
 		case "拼音":
 			out[h] = name.PinYin()
@@ -249,7 +245,7 @@ func headNameOutputString(heads []string, name Name, skip func(string) bool) (ou
 		switch h {
 		case "姓名":
 			out = append(out, h, name.String())
-		case "笔画":
+		case "筆畫":
 			out = append(out, h, name.Strokes())
 		case "拼音":
 			out = append(out, h, name.PinYin())
@@ -264,7 +260,7 @@ func nameOutputString(heads []string, name Name) (out []string) {
 		switch h {
 		case "姓名":
 			out = append(out, name.String())
-		case "笔画":
+		case "筆畫":
 			out = append(out, name.Strokes())
 		case "拼音":
 			out = append(out, name.PinYin())

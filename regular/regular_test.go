@@ -1,12 +1,12 @@
 package regular
 
 import (
-	"github.com/godcong/fate"
-	"github.com/godcong/fate/config"
 	"testing"
+
+	"github.com/festum/cng"
+	"github.com/festum/cng/config"
 )
 
-// TestNew ...
 func TestNew(t *testing.T) {
 	c := config.LoadConfig()
 	db := fate.InitDatabaseWithConfig(*c)

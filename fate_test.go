@@ -1,20 +1,17 @@
-package fate_test
+package cng_test
 
 import (
 	"context"
-	"github.com/godcong/chronos"
-	"github.com/godcong/fate"
-	"github.com/godcong/fate/config"
 	"testing"
-)
 
-func init() {
-	//trait.NewZapFileSugar("fate.log")
-}
+	"github.com/festum/chronos"
+	"github.com/festum/cng"
+	"github.com/festum/cng/config"
+)
 
 func TestFate_RunMakeName(t *testing.T) {
 	born := chronos.New("2020/02/06 15:45").Solar().Time()
-	last := "张"
+	last := "張"
 	cfg := config.DefaultConfig()
 	cfg.BaguaFilter = true
 	cfg.ZodiacFilter = true

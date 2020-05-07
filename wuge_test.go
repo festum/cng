@@ -1,9 +1,10 @@
-package fate_test
+package cng_test
 
 import (
-	"github.com/godcong/fate"
 	"log"
 	"testing"
+
+	"github.com/festum/cng"
 )
 
 func TestWuGe_WaiGe(t *testing.T) {

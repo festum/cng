@@ -1,19 +1,20 @@
-package fate
+package cng
 
 import (
-	"github.com/godcong/chronos"
 	"strings"
+
+	"github.com/festum/chronos"
 )
 
 var diIndex = map[string]int{
-	"子": 0, "丑": 1, "寅": 2, "卯": 3, "辰": 4, "巳": 5, "午": 6, "未": 7, "申": 8, "酉": 9, "戌": 10, "亥": 11,
+	"子": 0, "醜": 1, "寅": 2, "卯": 3, "辰": 4, "巳": 5, "午": 6, "未": 7, "申": 8, "酉": 9, "戌": 10, "亥": 11,
 }
 
 var tianIndex = map[string]int{
 	"甲": 0, "乙": 1, "丙": 2, "丁": 3, "戊": 4, "己": 5, "庚": 6, "辛": 7, "壬": 8, "癸": 9,
 }
 
-//天干强度表
+//天干強度表
 var tiangan = [][]int{
 	{1200, 1200, 1000, 1000, 1000, 1000, 1000, 1000, 1200, 1200},
 	{1060, 1060, 1000, 1000, 1100, 1100, 1140, 1140, 1100, 1100},
@@ -29,7 +30,7 @@ var tiangan = [][]int{
 	{1200, 1200, 1000, 1000, 1000, 1000, 1000, 1000, 1140, 1140},
 }
 
-//地支强度表
+//地支強度表
 var dizhi = []map[string][]int{
 	{
 		"癸": {1200, 1100, 1000, 1000, 1040, 1060, 1000, 1000, 1200, 1200, 1060, 1140},
@@ -85,7 +86,7 @@ var wuXingTianGan = map[string]string{
 
 var wuXingDiZhi = map[string]string{
 	"子": "水",
-	"丑": "土",
+	"醜": "土",
 	"寅": "木",
 	"卯": "木",
 	"辰": "土",
@@ -115,7 +116,7 @@ type BaZi struct {
 	xiyong *XiYong
 }
 
-//NewBazi 创建八字
+//NewBazi 建立八字
 func NewBazi(calendar chronos.Calendar) *BaZi {
 	ec := calendar.Lunar().EightCharacter()
 	return &BaZi{
@@ -200,7 +201,7 @@ func baziToWuXing(bazi []string) []string {
 	return wx
 }
 
-//计算同类
+//計算同類
 func (z *BaZi) calcSimilar() *BaZi {
 	for i := range sheng {
 		if wuXingTianGan[z.RiZhu()] == sheng[i] {
@@ -220,7 +221,7 @@ func (z *BaZi) calcSimilar() *BaZi {
 	return z
 }
 
-//计算异类
+//計算異類
 func (z *BaZi) calcHeterogeneous() *BaZi {
 	for i := range sheng {
 		for ti := range z.xiyong.Similar {

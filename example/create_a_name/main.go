@@ -2,29 +2,31 @@ package main
 
 import (
 	"context"
-	"github.com/godcong/chronos"
-	"github.com/godcong/fate"
-	"github.com/godcong/fate/config"
+
+	"github.com/festum/chronos"
+
+	"github.com/festum/cng"
+	"github.com/festum/cng/config"
 )
 
 func main() {
 
-	//cfg := config.DefaultConfig() 参数如下
+	//cfg := config.DefaultConfig() 參數如下
 	//config.Config{
 	//	HardFilter: false,
-	//	//输出最大笔画数
+	//	//輸出最大筆畫數
 	//	StrokeMax: 3,
-	//	//输出最小笔画数
+	//	//輸出最小筆畫數
 	//	StrokeMin: 18,
-	//	//立春修正（出生日期为立春当日时间为已过立春八字需修正）
+	//	//立春修正（出生日期為立春當日時間為已過立春八字需修正）
 	//	FixBazi: true,
-	//	//三才五格过滤
+	//	//三才五格過濾
 	//	SupplyFilter: true,
-	//	//生肖过滤
+	//	//生肖過濾
 	//	ZodiacFilter: true,
-	//	//周易八卦过滤
+	//	//周易八卦過濾
 	//	BaguaFilter: true,
-	//	//连接DB：
+	//	//連線DB：
 	//	Database: config.Database{
 	//		Host:         "localhost",
 	//		Port:         "3306",
@@ -43,7 +45,7 @@ func main() {
 	//出生日期
 	born := chronos.New("2020/01/14 02:45")
 	//姓氏
-	lastName := "张"
+	lastName := "張"
 	cfg := config.DefaultConfig()
 	cfg.BaguaFilter = true
 	cfg.ZodiacFilter = true

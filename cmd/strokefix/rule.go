@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/godcong/fate"
+	"github.com/festum/cng"
 	"strings"
 )
 
