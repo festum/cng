@@ -4,6 +4,7 @@ Thumbs.db
 *.bak
 *.cache
 *.log
+*.sql
 [Bb]in
 .vscode/
 /.idea

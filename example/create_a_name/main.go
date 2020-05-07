@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"github.com/festum/chronos"
-
 	"github.com/festum/cng"
 	"github.com/festum/cng/config"
 )
@@ -42,10 +41,8 @@ func main() {
 	//		ShowExecTime: false,
 	//	},
 	//})
-	//出生日期
-	born := chronos.New("2020/01/14 02:45")
-	//姓氏
-	lastName := "張"
+	born := chronos.New("2020/07/01 18:00")
+	lastName := "秦"
 	cfg := config.DefaultConfig()
 	cfg.BaguaFilter = true
 	cfg.ZodiacFilter = true
