@@ -7,23 +7,22 @@ import (
 	"strings"
 	"time"
 
-	"github.com/goextension/log"
-	"github.com/xormsharp/xorm"
 	"github.com/festum/chronos"
-	"github.com/festum/yi"
 	"github.com/festum/cng/config"
 	"github.com/festum/cng/logger"
+	"github.com/festum/yi"
+	"github.com/xormsharp/xorm"
 )
 
 var _logger = logger.NewLogger()
 
 type HandleOutputFunc func(name Name)
 
-type Sex bool //FIXME: WTF? should be gender
+type Gender int
 
 const (
-	_male  Sex = false //FIXME: should be enum int
-	_femail Sex = true
+	Male Gender = iota + 1
+	Female
 )
 
 const HelpContent = "正在使用Fate生成姓名列表，如遇到問題請訪問項目地址：https://github.com/godcong/fate獲取幫助!"
@@ -44,7 +43,7 @@ type fateImpl struct { //FIXME: simplify it
 	lastChar []*Character
 	names    []*Name
 	nameType int
-	sex      Sex
+	gender   Gender
 	debug    bool
 	baZi     *BaZi
 	zodiac   *Zodiac
@@ -70,24 +69,20 @@ func (f *fateImpl) RunInit() (e error) {
 	return nil
 }
 
-// Options ...
 type Options func(f *fateImpl)
 
-// ConfigOption ...
 func ConfigOption(cfg *config.Config) Options {
 	return func(f *fateImpl) {
 		f.config = cfg
 	}
 }
 
-// SexOption ...
-func SexOption(sex Sex) Options {
+func SetGender(gender Gender) Options {
 	return func(f *fateImpl) {
-		f.sex = sex
+		f.gender = gender
 	}
 }
 
-// Debug ...
 func Debug() Options {
 	return func(f *fateImpl) {
 		f.debug = true
@@ -139,7 +134,7 @@ func (f *fateImpl) getLastCharacter() error {
 }
 
 func (f *fateImpl) MakeName(ctx context.Context) (e error) {
-	log.Info(HelpContent)
+	_logger.Info(HelpContent)
 	e = f.out.Head(f.config.FileOutput.Heads...)
 	if e != nil {
 		return errorWith(e, "write head failed")
@@ -161,7 +156,7 @@ func (f *fateImpl) MakeName(ctx context.Context) (e error) {
 	go func() {
 		e := f.getWugeName(name)
 		if e != nil {
-			log.Error(e)
+			_logger.Error(e)
 		}
 	}()
 
@@ -170,7 +165,7 @@ func (f *fateImpl) MakeName(ctx context.Context) (e error) {
 	for n := range name {
 		select {
 		case <-ctx.Done():
-			log.Info("end")
+			_logger.Info("end")
 			return
 		default:
 		}
@@ -179,33 +174,33 @@ func (f *fateImpl) MakeName(ctx context.Context) (e error) {
 		tmpChar = append(tmpChar, n.LastName...)
 		//filter bazi
 		if f.config.SupplyFilter && !filterXiYong(f.XiYong().Shen(), tmpChar...) {
-			//log.Infow("supply", "name", n.String())
+			//_logger.Infow("supply", "name", n.String())
 			continue
 		}
 		//filter zodiac
 		if f.config.ZodiacFilter && !filterZodiac(f.born, n.FirstName...) {
-			//log.Infow("zodiac", "name", n.String())
+			//_logger.Infow("zodiac", "name", n.String())
 			continue
 		}
 		//filter bagua
 		if f.config.BaguaFilter && !filterYao(n.BaGua(), "凶") {
-			//log.Infow("bagua", "name", n.String())
+			//_logger.Infow("bagua", "name", n.String())
 			continue
 		}
 		ben := n.BaGua().Get(yi.BenGua)
 		bian := n.BaGua().Get(yi.BianGua)
 		if f.debug {
-			log.Infow("bazi", "born", f.born.LunarDate(), "time", f.born.Lunar().EightCharacter())
-			log.Infow("xiyong", "wuxing", n.WuXing(), "god", f.XiYong().Shen(), "pinheng", f.XiYong())
-			log.Infow("ben", "ming", ben.GuaMing, "chu", ben.ChuYaoJiXiong, "er", ben.ErYaoJiXiong, "san", ben.SanYaoJiXiong, "si", ben.SiYaoJiXiong, "wu", ben.WuYaoJiXiong, "liu", ben.ShangYaoJiXiong)
-			log.Infow("bian", "ming", bian.GuaMing, "chu", bian.ChuYaoJiXiong, "er", bian.ErYaoJiXiong, "san", bian.SanYaoJiXiong, "si", bian.SiYaoJiXiong, "wu", bian.WuYaoJiXiong, "liu", bian.ShangYaoJiXiong)
+			_logger.Infow("bazi", "born", f.born.LunarDate(), "time", f.born.Lunar().EightCharacter())
+			_logger.Infow("xiyong", "wuxing", n.WuXing(), "god", f.XiYong().Shen(), "pinheng", f.XiYong())
+			_logger.Infow("ben", "ming", ben.GuaMing, "chu", ben.ChuYaoJiXiong, "er", ben.ErYaoJiXiong, "san", ben.SanYaoJiXiong, "si", ben.SiYaoJiXiong, "wu", ben.WuYaoJiXiong, "liu", ben.ShangYaoJiXiong)
+			_logger.Infow("bian", "ming", bian.GuaMing, "chu", bian.ChuYaoJiXiong, "er", bian.ErYaoJiXiong, "san", bian.SanYaoJiXiong, "si", bian.SiYaoJiXiong, "wu", bian.WuYaoJiXiong, "liu", bian.ShangYaoJiXiong)
 		}
 
 		if err := f.out.Write(*n); err != nil {
 			return err
 		}
 		if f.debug {
-			log.Infow(n.String(), "筆畫", n.Strokes(), "拼音", n.PinYin(), "八字", f.born.Lunar().EightCharacter(), "喜用神", f.XiYong().Shen(), "本卦", ben.GuaMing, "變卦", bian.GuaMing)
+			_logger.Infow(n.String(), "筆畫", n.Strokes(), "拼音", n.PinYin(), "八字", f.born.Lunar().EightCharacter(), "喜用神", f.XiYong().Shen(), "本卦", ben.GuaMing, "變卦", bian.GuaMing)
 		}
 	}
 	return nil
@@ -245,7 +240,7 @@ func (f *fateImpl) getWugeName(name chan<- *Name) (e error) {
 	go func() {
 		e = f.db.FilterWuGe(f.lastChar, lucky)
 		if e != nil {
-			log.Error(e)
+			_logger.Error(e)
 			return
 		}
 	}()
@@ -256,7 +251,7 @@ func (f *fateImpl) getWugeName(name chan<- *Name) (e error) {
 			//TODO
 		}
 
-		if bool(f.sex) && filterSex(l) {
+		if f.gender == Female && filterSex(l) {
 			continue
 		}
 
@@ -272,7 +267,7 @@ func (f *fateImpl) getWugeName(name chan<- *Name) (e error) {
 		}
 
 		if f.debug {
-			log.Infow("lucky", "l1", l.LastStroke1, "l2", l.LastStroke2, "f1", l.FirstStroke1, "f2", l.FirstStroke2)
+			_logger.Infow("lucky", "l1", l.LastStroke1, "l2", l.LastStroke2, "f1", l.FirstStroke1, "f2", l.FirstStroke2)
 		}
 		if f.config.Regular {
 			f1s, e = f.db.GetCharacters(Stoker(l.FirstStroke1, Regular()))

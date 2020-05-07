@@ -8,7 +8,7 @@ import (
 
 func main() {
 	c := config.LoadConfig()
-	db := fate.InitDatabaseWithConfig(*c)
+	db := cng.InitDatabaseWithConfig(*c)
 	r := regular.New(db)
 	r.Run()
 }

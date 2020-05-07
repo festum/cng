@@ -10,9 +10,9 @@ func main() {
 	var e error
 
 	cfg := config.DefaultConfig()
-	db := fate.InitDatabaseWithConfig(*cfg)
+	db := cng.InitDatabaseWithConfig(*cfg)
 
-	e = db.Sync(fate.Character{})
+	e = db.Sync(cng.Character{})
 	if e != nil {
 		return
 	}
@@ -21,7 +21,7 @@ func main() {
 	if e != nil {
 		panic(e)
 	}
-	e = CheckLoader(`E:\project\fate\cmd\strokefix\dict.json`)
+	e = CheckLoader(`./cmd/strokefix/dict.json`) //FIXME: use generic path
 	if e != nil {
 		panic(e)
 	}

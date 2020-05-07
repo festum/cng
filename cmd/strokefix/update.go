@@ -7,13 +7,13 @@ import (
 )
 
 func UpdateFix(engine *xorm.Engine) error {
-	rows, e := engine.Rows(&fate.Character{})
+	rows, e := engine.Rows(&cng.Character{})
 	if e != nil {
 		return e
 	}
-	var ch *fate.Character
+	var ch *cng.Character
 	for rows.Next() {
-		ch = &fate.Character{}
+		ch = &cng.Character{}
 		e := rows.Scan(ch)
 		if e != nil {
 			log.Errorw("fix", "charater", ch.Ch, "error", e)

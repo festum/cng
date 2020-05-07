@@ -5,9 +5,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/xormsharp/xorm"
-
 	"github.com/festum/cng"
+	"github.com/xormsharp/xorm"
 )
 
 var regularList = map[int]string{
@@ -37,7 +36,7 @@ var regularList = map[int]string{
 }
 
 type regular struct {
-	db      fate.Database
+	db      cng.Database
 	total   int
 	fixed   int
 	unfixed int
@@ -77,13 +76,13 @@ type Regular interface {
 }
 
 // New ...
-func New(database fate.Database) Regular {
+func New(database cng.Database) Regular {
 	return &regular{
 		db: database,
 	}
 }
 
-func setAllRegular(db fate.Database, regular bool) (e error) {
+func setAllRegular(db cng.Database, regular bool) (e error) {
 	engine, b := db.Database().(*xorm.Engine)
 	if !b {
 		return errors.New("wrong type")
@@ -99,8 +98,8 @@ func setAllRegular(db fate.Database, regular bool) (e error) {
 	return nil
 }
 
-func fixRegular(db fate.Database, ch string) bool {
-	char, err := db.GetCharacter(fate.Char(ch))
+func fixRegular(db cng.Database, ch string) bool {
+	char, err := db.GetCharacter(cng.Char(ch))
 	if err != nil {
 		fmt.Printf("failed get char(%s) with error (%v)\n", ch, err)
 		return false

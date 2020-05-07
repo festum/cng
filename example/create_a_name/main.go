@@ -69,7 +69,7 @@ func main() {
 		Path:       "name.log",
 	}
 
-	f := fate.NewFate(lastName, born.Solar().Time(), fate.ConfigOption(cfg))
+	f := cng.NewFate(lastName, born.Solar().Time(), cng.ConfigOption(cfg))
 
 	e := f.MakeName(context.Background())
 	if e != nil {

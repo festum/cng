@@ -3,19 +3,20 @@ package main
 import (
 	"context"
 	"fmt"
+	"time"
+
 	"github.com/festum/chronos"
 	"github.com/festum/cng"
 	"github.com/festum/cng/config"
 	"github.com/goextension/log"
 	"github.com/spf13/cobra"
-	"time"
 )
 
 func cmdName() *cobra.Command {
 	path := ""
 	born := ""
 	last := ""
-	sex := false
+	gender := 0
 	cmd := &cobra.Command{
 		Use:   "name",
 		Short: "output the name",
@@ -28,7 +29,7 @@ func cmdName() *cobra.Command {
 			if e != nil {
 				log.Fatalw("parseborn", "error", e)
 			}
-			f := fate.NewFate(last, bornTime, fate.ConfigOption(cfg), fate.SexOption(fate.Sex(sex)))
+			f := cng.NewFate(last, bornTime, cng.ConfigOption(cfg), cng.SetGender(cng.Gender(gender)))
 
 			e = f.MakeName(context.Background())
 			if e != nil {
@@ -41,6 +42,6 @@ func cmdName() *cobra.Command {
 	cmd.Flags().StringVarP(&last, "last", "l", "", "set lastname")
 	cmd.Flags().StringVarP(&born, "born", "b", time.Now().Format(chronos.DateFormat), "set birth as 2016/01/02 15:04")
 	cmd.Flags().StringVarP(&path, "path", "p", ".", "set the input path")
-	cmd.Flags().BoolVarP(&sex, "sex", "s", false, "set sex of the baby")
+	cmd.Flags().BoolVarP(&gender, "gender", "s", false, "set baby gender")
 	return cmd
 }

@@ -9,7 +9,7 @@ import (
 
 func TestNew(t *testing.T) {
 	c := config.LoadConfig()
-	db := fate.InitDatabaseWithConfig(*c)
+	db := cng.InitDatabaseWithConfig(*c)
 	regular := New(db)
 	regular.Run()
 }

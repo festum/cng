@@ -4,6 +4,8 @@ go 1.14
 
 require (
 	github.com/caarlos0/env v3.5.0+incompatible
+	github.com/coreos/go-etcd v2.0.0+incompatible // indirect
+	github.com/cpuguy83/go-md2man v1.0.10 // indirect
 	github.com/festum/chronos v0.0.4
 	github.com/festum/yi v1.0.3
 	github.com/go-sql-driver/mysql v1.5.0
@@ -11,7 +13,8 @@ require (
 	github.com/goextension/log v0.0.2
 	github.com/google/uuid v1.1.1
 	github.com/rakyll/statik v0.1.7
-	github.com/spf13/cobra v0.0.5
+	github.com/spf13/cobra v1.0.0
+	github.com/ugorji/go/codec v0.0.0-20181204163529-d75b2dcb6bc8 // indirect
 	github.com/xormsharp/builder v0.3.6
 	github.com/xormsharp/xorm v1.0.0
 	go.uber.org/zap v1.15.0

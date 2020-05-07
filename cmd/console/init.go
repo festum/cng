@@ -3,14 +3,17 @@ package main
 import (
 	"errors"
 	"fmt"
-	"github.com/festum/cng/config"
-	"github.com/spf13/cobra"
 	"io"
-	"log"
 	"os"
 	"path/filepath"
 	"runtime"
+
+	"github.com/festum/cng/config"
+	"github.com/festum/cng/logger"
+	"github.com/spf13/cobra"
 )
+
+var _logger = logger.NewLogger()
 
 func cmdInit() *cobra.Command {
 	var path string
@@ -20,19 +23,19 @@ func cmdInit() *cobra.Command {
 		Run: func(cmd *cobra.Command, args []string) {
 			absPath, e := filepath.Abs(path)
 			if e != nil {
-				log.Fatalf("wrong path with:%v", e)
+				_logger.Fatalf("wrong path with:%v", e)
 			}
 			fmt.Printf("config will output to %s\n", filepath.Join(absPath, config.JSONName))
 			config.DefaultJSONPath = path
 
 			e = config.OutputConfig(config.DefaultConfig())
 			if e != nil {
-				log.Fatal(e)
+				_logger.Fatal(e)
 			}
 
 			e = zoneCheck()
 			if e != nil {
-				log.Fatal(e)
+				_logger.Fatal(e)
 			}
 		},
 	}

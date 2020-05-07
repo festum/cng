@@ -4,11 +4,12 @@ import (
 	"crypto/md5"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"strconv"
+
 	"github.com/festum/cng"
 	"github.com/goextension/log"
 	"github.com/xormsharp/xorm"
-	"io/ioutil"
-	"strconv"
 )
 
 type Dict struct {
@@ -36,7 +37,7 @@ func CheckLoader(s string) error {
 	return nil
 }
 
-func CheckVerify(db fate.Database) error {
+func CheckVerify(db cng.Database) error {
 	if err := verifySub(db, dict.Jin, "金"); err != nil {
 		return err
 	}
@@ -56,7 +57,7 @@ func CheckVerify(db fate.Database) error {
 	return nil
 }
 
-func verifySub(db fate.Database, m map[string][]string, wx string) error {
+func verifySub(db cng.Database, m map[string][]string, wx string) error {
 	count := 0
 	eng := db.Database().(*xorm.Engine)
 	for k, v := range m {
@@ -68,7 +69,7 @@ func verifySub(db fate.Database, m map[string][]string, wx string) error {
 			i, _ := strconv.Atoi(k)
 			if e != nil {
 				log.Errorw("get character error", "character", vv)
-				ch := fate.Character{
+				ch := cng.Character{
 					Hash:                     hash(vv),
 					PinYin:                   []string{"custom"},
 					Ch:                       vv,

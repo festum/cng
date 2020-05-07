@@ -28,19 +28,19 @@ func init() {
 		{Number: 18, Lucky: "半吉", SkyNine: "鐵鏡重磨", Comment: "權威顯達，博得名利，且養柔德，功成名就。"},
 		{Number: 19, Lucky: "凶", SkyNine: "多難", Comment: "風雲蔽日，辛苦重來，雖有智謀，萬事挫折。"},
 		{Number: 20, Lucky: "凶", SkyNine: "屋下藏金", Comment: "非業破運，災難重重，進退維谷，萬事難成。"},
-		{Number: 21, Lucky: "吉", Sex: true, SkyNine: "明月中天", Comment: "光風霽月，萬物確立，官運亨通，大搏名利。女性不宜此數。"},
+		{Number: 21, Lucky: "吉", Gender: Female, SkyNine: "明月中天", Comment: "光風霽月，萬物確立，官運亨通，大搏名利。女性不宜此數。"},
 		{Number: 22, Lucky: "凶", SkyNine: "秋草逢霜", Comment: "秋草逢霜，困難疾弱，雖出豪傑，人生波折。"},
-		{Number: 23, Lucky: "吉", Sex: true, SkyNine: "壯麗", Comment: "旭日東昇，壯麗壯觀，權威旺盛，功名榮達。女性不宜此數。"},
+		{Number: 23, Lucky: "吉", Gender: Female, SkyNine: "壯麗", Comment: "旭日東昇，壯麗壯觀，權威旺盛，功名榮達。女性不宜此數。"},
 		{Number: 24, Lucky: "吉", SkyNine: "掘藏得金", Comment: "家門餘慶，金錢豐盈，白手成家，財源廣進。"},
 		{Number: 25, Lucky: "半吉", SkyNine: "榮俊", Comment: "資性英敏，才能奇特，克服傲慢，尚可成功。"},
 		{Number: 26, Lucky: "凶", SkyNine: "變怪", Comment: "變怪之謎，英雄豪傑，波瀾重疊，而奏大功。"},
 		{Number: 27, Lucky: "凶", SkyNine: "增長", Comment: "慾望無止，自我強烈，多受毀謗，尚可成功。"},
-		{Number: 28, Lucky: "凶", Sex: true, SkyNine: "闊水浮萍", Comment: "遭難之數，豪傑氣概，四海漂泊，終世浮躁。女性不宜此數。"},
+		{Number: 28, Lucky: "凶", Gender: Female, SkyNine: "闊水浮萍", Comment: "遭難之數，豪傑氣概，四海漂泊，終世浮躁。女性不宜此數。"},
 		{Number: 29, Lucky: "吉", SkyNine: "智謀", Comment: "智謀優秀，財力歸集，名聞海內，成就大業。"},
 		{Number: 30, Lucky: "半吉", SkyNine: "非運", Comment: "沉浮不定，凶吉難變，若明若暗，大成大敗。"},
 		{Number: 31, Lucky: "吉", SkyNine: "春日花開", Comment: "智勇得志，博得名利，統領眾人，繁榮富貴。"},
 		{Number: 32, Lucky: "吉", SkyNine: "寶馬金鞍", Comment: "僥倖多望，貴人得助，財帛如裕，繁榮至上。"},
-		{Number: 33, Lucky: "吉", Sex: true, SkyNine: "旭日升天", Comment: "旭日升天，鸞鳳相會，名聞天下，隆昌至極。女性不宜此數。"},
+		{Number: 33, Lucky: "吉", Gender: Female, SkyNine: "旭日升天", Comment: "旭日升天，鸞鳳相會，名聞天下，隆昌至極。女性不宜此數。"},
 		{Number: 34, Lucky: "凶", SkyNine: "破家", Comment: "破家之身，見識短小，辛苦遭逢，災禍至極。"},
 		{Number: 35, Lucky: "吉", SkyNine: "高樓望月", Comment: "溫和平靜，智達通暢，文昌技藝，奏功洋洋。"},
 		{Number: 36, Lucky: "半吉", SkyNine: "波瀾重疊", Comment: "波瀾重疊，沉浮萬狀，俠肝義膽，捨己成仁。"},
@@ -97,13 +97,13 @@ type DaYan struct {
 	Number  int
 	Lucky   string
 	Max     bool
-	Sex     bool //male(false),female(true)
+	Gender  Gender
 	SkyNine string
 	Comment string
 }
 
 func (dy DaYan) isFemale() bool {
-	return dy.Sex
+	return dy.Gender == Female
 }
 
 func (dy DaYan) IsBestPoint() bool {

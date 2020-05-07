@@ -240,7 +240,7 @@ func getStroke(character *Character) int {
 
 func isFemale(dys ...int) bool {
 	for _, dy := range dys {
-		if GetDaYan(dy).Sex {
+		if GetDaYan(dy).Gender == Female {
 			return true
 		}
 	}
