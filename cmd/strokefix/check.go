@@ -87,7 +87,7 @@ func verifySub(db cng.Database, m map[string][]string, wx string) error {
 					TraditionalRadicalStroke: 0,
 					TraditionalTotalStroke:   0,
 					NameScience:              true,
-					WuXing:                   wx,
+					FiveElements:             wx,
 					Lucky:                    "",
 					Regular:                  false,
 					TraditionalCharacter:     nil,
@@ -100,12 +100,12 @@ func verifySub(db cng.Database, m map[string][]string, wx string) error {
 				}
 				continue
 			}
-			if character.WuXing != wx {
-				if character.WuXing == "" {
+			if character.FiveElements != wx {
+				if character.FiveElements == "" {
 					//fix wuxing
-					character.WuXing = wx
+					character.FiveElements = wx
 				} else {
-					log.Warnw("wrong wuxing", "character", vv, "charwuxing", character.WuXing, "dictwuxing", wx)
+					log.Warnw("wrong wuxing", "character", vv, "charwuxing", character.FiveElements, "dictwuxing", wx)
 				}
 			}
 			if character.ScienceStroke != i {

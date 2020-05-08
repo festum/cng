@@ -25,8 +25,6 @@ const (
 	Female
 )
 
-const HelpContent = "正在使用Fate生成姓名列表，如遇到問題請訪問項目地址：https://github.com/godcong/fate獲取幫助!"
-
 type Fate interface { //FIXME: nonsense interface
 	MakeName(ctx context.Context) (e error)
 	XiYong() *XiYong
@@ -133,75 +131,72 @@ func (f *fateImpl) getLastCharacter() error {
 	return nil
 }
 
-func (f *fateImpl) MakeName(ctx context.Context) (e error) {
-	_logger.Info(HelpContent)
-	e = f.out.Head(f.config.FileOutput.Heads...)
-	if e != nil {
+func (f *fateImpl) MakeName(ctx context.Context) error {
+	_logger.Info("MakeName processing...")
+
+	_logger.Debug("Do Head")
+	if e := f.out.Head(f.config.FileOutput.Heads...); e != nil {
 		return errorWith(e, "write head failed")
 	}
-	e = f.RunInit()
-	if e != nil {
+	_logger.Debug("Do RunInit")
+	if e := f.RunInit(); e != nil {
 		return errorWith(e, "init failed")
 	}
+	_logger.Debug("Do CountWuGeLucky")
 	n, e := f.db.CountWuGeLucky()
 	if e != nil || n == 0 {
 		return errorWith(e, "count total error")
 	}
-
-	e = f.getLastCharacter()
-	if e != nil {
+	_logger.Debug("Do getLastCharacter")
+	if e := f.getLastCharacter(); e != nil {
 		return errorWith(e, "get char failed")
 	}
 	name := make(chan *Name)
 	go func() {
-		e := f.getWugeName(name)
-		if e != nil {
+		if e := f.getWugeName(name); e != nil {
 			_logger.Error(e)
 		}
 	}()
-
+	_logger.Debug("got getWugeName")
 	var tmpChar []*Character
 	//supplyFilter := false
 	for n := range name {
 		select {
 		case <-ctx.Done():
 			_logger.Info("end")
-			return
+			return nil
 		default:
 		}
 
 		tmpChar = n.FirstName
 		tmpChar = append(tmpChar, n.LastName...)
 		//filter bazi
-		if f.config.SupplyFilter && !filterXiYong(f.XiYong().Shen(), tmpChar...) {
-			//_logger.Infow("supply", "name", n.String())
+		if f.config.SupplyFilterEnabled && !filterXiYong(f.XiYong().Shen(), tmpChar...) {
+			// _logger.Debugw("supply", "name", n.String())
 			continue
 		}
 		//filter zodiac
-		if f.config.ZodiacFilter && !filterZodiac(f.born, n.FirstName...) {
-			//_logger.Infow("zodiac", "name", n.String())
+		if f.config.ZodiacFilterEnabled && !filterZodiac(f.born, n.FirstName...) {
+			// _logger.Debugw("zodiac", "name", n.String())
 			continue
 		}
-		//filter bagua
-		if f.config.BaguaFilter && !filterYao(n.BaGua(), "凶") {
-			//_logger.Infow("bagua", "name", n.String())
+		//filter trigram
+		if f.config.TrigramFilterEnabled && !filterYao(n.Trigram(), "凶") {
+			// _logger.Debugw("trigram", "name", n.String())
 			continue
 		}
-		ben := n.BaGua().Get(yi.BenGua)
-		bian := n.BaGua().Get(yi.BianGua)
-		if f.debug {
-			_logger.Infow("bazi", "born", f.born.LunarDate(), "time", f.born.Lunar().EightCharacter())
-			_logger.Infow("xiyong", "wuxing", n.WuXing(), "god", f.XiYong().Shen(), "pinheng", f.XiYong())
-			_logger.Infow("ben", "ming", ben.GuaMing, "chu", ben.ChuYaoJiXiong, "er", ben.ErYaoJiXiong, "san", ben.SanYaoJiXiong, "si", ben.SiYaoJiXiong, "wu", ben.WuYaoJiXiong, "liu", ben.ShangYaoJiXiong)
-			_logger.Infow("bian", "ming", bian.GuaMing, "chu", bian.ChuYaoJiXiong, "er", bian.ErYaoJiXiong, "san", bian.SanYaoJiXiong, "si", bian.SiYaoJiXiong, "wu", bian.WuYaoJiXiong, "liu", bian.ShangYaoJiXiong)
-		}
+		ben := n.Trigram().Get(yi.BenGua)
+		bian := n.Trigram().Get(yi.BianGua)
+
+		_logger.Debugw("bazi", "born", f.born.LunarDate(), "time", f.born.Lunar().EightCharacter())
+		_logger.Debugw("xiyong", "wuxing", n.FiveElements(), "god", f.XiYong().Shen(), "pinheng", f.XiYong())
+		_logger.Debugw("ben", "ming", ben.GuaMing, "chu", ben.ChuYaoJiXiong, "er", ben.ErYaoJiXiong, "san", ben.SanYaoJiXiong, "si", ben.SiYaoJiXiong, "wu", ben.WuYaoJiXiong, "liu", ben.ShangYaoJiXiong)
+		_logger.Debugw("bian", "ming", bian.GuaMing, "chu", bian.ChuYaoJiXiong, "er", bian.ErYaoJiXiong, "san", bian.SanYaoJiXiong, "si", bian.SiYaoJiXiong, "wu", bian.WuYaoJiXiong, "liu", bian.ShangYaoJiXiong)
 
 		if err := f.out.Write(*n); err != nil {
 			return err
 		}
-		if f.debug {
-			_logger.Infow(n.String(), "筆畫", n.Strokes(), "拼音", n.PinYin(), "八字", f.born.Lunar().EightCharacter(), "喜用神", f.XiYong().Shen(), "本卦", ben.GuaMing, "變卦", bian.GuaMing)
-		}
+		_logger.Debugw(n.String(), "筆畫", n.Strokes(), "拼音", n.PinYin(), "八字", f.born.Lunar().EightCharacter(), "喜用神", f.XiYong().Shen(), "本卦", ben.GuaMing, "變卦", bian.GuaMing)
 	}
 	return nil
 }
@@ -247,11 +242,7 @@ func (f *fateImpl) getWugeName(name chan<- *Name) (e error) {
 	var f1s []*Character
 	var f2s []*Character
 	for l := range lucky {
-		if f.config.FilterMode == config.FilterModeCustom {
-			//TODO
-		}
-
-		if f.gender == Female && filterSex(l) {
+		if f.gender == Female && filterGender(l) {
 			continue
 		}
 
@@ -298,7 +289,7 @@ func (f *fateImpl) getWugeName(name chan<- *Name) (e error) {
 					continue
 				}
 				n := createName(f, f1, f2)
-				n.baZi = NewBazi(f.born)
+				n.eightChars = NewBazi(f.born)
 				name <- n
 			}
 		}
@@ -306,8 +297,8 @@ func (f *fateImpl) getWugeName(name chan<- *Name) (e error) {
 	return nil
 }
 
-func filterSex(lucky *WuGeLucky) bool {
-	return lucky.ZongSex == true
+func filterGender(lucky *WuGeLucky) bool {
+	return lucky.NeutralGender == true
 }
 
 func isLucky(s string) bool {

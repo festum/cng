@@ -9,44 +9,12 @@ import (
 )
 
 func main() {
-
-	//cfg := config.DefaultConfig() 參數如下
-	//config.Config{
-	//	HardFilter: false,
-	//	//輸出最大筆畫數
-	//	StrokeMax: 3,
-	//	//輸出最小筆畫數
-	//	StrokeMin: 18,
-	//	//立春修正（出生日期為立春當日時間為已過立春八字需修正）
-	//	FixBazi: true,
-	//	//三才五格過濾
-	//	SupplyFilter: true,
-	//	//生肖過濾
-	//	ZodiacFilter: true,
-	//	//周易八卦過濾
-	//	BaguaFilter: true,
-	//	//連線DB：
-	//	Database: config.Database{
-	//		Host:         "localhost",
-	//		Port:         "3306",
-	//		User:         "root",
-	//		Pwd:          "111111",
-	//		Name:         "fate",
-	//		MaxIdleCon:   0,
-	//		MaxOpenCon:   0,
-	//		Driver:       "mysql",
-	//		File:         "",
-	//		Dsn:          "",
-	//		ShowSQL:      false,
-	//		ShowExecTime: false,
-	//	},
-	//})
 	born := chronos.New("2020/07/01 18:00")
 	lastName := "秦"
 	cfg := config.DefaultConfig()
-	cfg.BaguaFilter = true
-	cfg.ZodiacFilter = true
-	cfg.SupplyFilter = true
+	cfg.TrigramFilterEnabled = true
+	cfg.ZodiacFilterEnabled = true
+	cfg.SupplyFilterEnabled = true
 	cfg.HardFilter = true
 	cfg.StrokeMin = 3
 	cfg.StrokeMax = 24

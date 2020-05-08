@@ -2,47 +2,48 @@ package cng
 
 //XiYong 喜用神
 type XiYong struct {
-	WuXingFen          map[string]int
+	FiveElementsScore  map[string]int
 	Similar            []string //同类
-	SimilarPoint       int
+	SimilarScore       int
 	Heterogeneous      []string //异类
-	HeterogeneousPoint int
+	HeterogeneousScore int
 }
 
 var sheng = []string{"木", "火", "土", "金", "水"}
 var ke = []string{"木", "土", "水", "火", "金"}
 
-//AddFen 五行分
-func (xy *XiYong) AddFen(s string, point int) {
-	if xy.WuXingFen == nil {
-		xy.WuXingFen = make(map[string]int)
+//AddFiveElementsScore 五行分
+func (xy *XiYong) AddFiveElementsScore(s string, point int) {
+	if xy.FiveElementsScore == nil {
+		xy.FiveElementsScore = make(map[string]int)
 	}
 
-	if v, b := xy.WuXingFen[s]; b {
-		xy.WuXingFen[s] = v + point
+	if v, b := xy.FiveElementsScore[s]; b {
+		xy.FiveElementsScore[s] = v + point
 	} else {
-		xy.WuXingFen[s] = point
+		xy.FiveElementsScore[s] = point
 	}
 }
 
-//GetFen 取得分
-func (xy *XiYong) GetFen(s string) (point int) {
-	if xy.WuXingFen == nil {
+//GetFiveElementsScore 取得分
+func (xy *XiYong) GetFiveElementsScore(s string) (point int) {
+	if xy.FiveElementsScore == nil {
 		return 0
 	}
-	if v, b := xy.WuXingFen[s]; b {
+	if v, b := xy.FiveElementsScore[s]; b {
 		return v
 	}
 	return 0
 }
 
-func (xy *XiYong) minFenWuXing(ss ...string) (wx string) {
+func (xy *XiYong) minFiveElementsScore(ss ...string) (wx string) {
+	// concatenate 5e for firstnames
 	min := 9999
 	for _, s := range ss {
-		if xy.WuXingFen[s] < min {
-			min = xy.WuXingFen[s]
+		if xy.FiveElementsScore[s] < min {
+			min = xy.FiveElementsScore[s] //FIXME: score always 2000
 			wx = s
-		} else if xy.WuXingFen[s] == min {
+		} else if xy.FiveElementsScore[s] == min {
 			wx += s
 		}
 	}
@@ -51,20 +52,21 @@ func (xy *XiYong) minFenWuXing(ss ...string) (wx string) {
 
 //Shen 喜用神
 func (xy *XiYong) Shen() string {
-	if !xy.QiangRuo() {
-		return xy.minFenWuXing(xy.Similar...)
+	if !xy.IsEightCharStrong() {
+		return xy.minFiveElementsScore(xy.Similar...)
 	}
-	return xy.minFenWuXing(xy.Heterogeneous...)
+	return xy.minFiveElementsScore(xy.Heterogeneous...)
 }
 
-//QiangRuo 八字偏强（true)弱（false）
-func (xy *XiYong) QiangRuo() bool {
-	return xy.SimilarPoint > xy.HeterogeneousPoint
+//IsEightCharStrong 八字偏强（true)弱（false）
+func (xy *XiYong) IsEightCharStrong() bool {
+	return xy.SimilarScore > xy.HeterogeneousScore
 }
 
 func filterXiYong(yong string, cs ...*Character) (b bool) {
 	for _, c := range cs {
-		if c.WuXing == yong {
+		// _logger.Debugw("filterXiYong", "5E", c.FiveElements, "yong", yong)
+		if c.FiveElements == yong {
 			return true
 		}
 	}

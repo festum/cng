@@ -26,7 +26,7 @@ type Character struct {
 	TraditionalRadicalStroke int      `xorm:"default(0) notnull traditional_radical_stroke"`           //繁體部首筆畫
 	TraditionalTotalStroke   int      `xorm:"default(0) notnull traditional_total_stroke"`             //簡體部首筆畫
 	NameScience              bool     `xorm:"default(0) notnull name_science"`                         //姓名學
-	WuXing                   string   `xorm:"default() notnull wu_xing"`                               //五行
+	FiveElements             string   `xorm:"default() notnull wu_xing"`                               //五行
 	Lucky                    string   `xorm:"default() notnull lucky"`                                 //吉凶寓意
 	Regular                  bool     `xorm:"default(0) notnull regular"`                              //常用
 	TraditionalCharacter     []string `xorm:"default() notnull traditional_character"`                 //繁體字

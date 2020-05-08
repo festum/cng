@@ -137,24 +137,24 @@ func (ge *WuGe) Check() bool {
 
 //WuGeLucky ...
 type WuGeLucky struct {
-	ID           string `xorm:"id pk"`
-	LastStroke1  int    `xorm:"last_stroke_1"`
-	LastStroke2  int    `xorm:"last_stroke_2"`
-	FirstStroke1 int    `xorm:"first_stroke_1"`
-	FirstStroke2 int    `xorm:"first_stroke_2"`
-	TianGe       int    `xorm:"tian_ge"`
-	TianDaYan    string `xorm:"tian_da_yan"`
-	RenGe        int    `xorm:"ren_ge"`
-	RenDaYan     string `xorm:"ren_da_yan"`
-	DiGe         int    `xorm:"di_ge"`
-	DiDaYan      string `xorm:"di_da_yan"`
-	WaiGe        int    `xorm:"wai_ge"`
-	WaiDaYan     string `xorm:"wai_da_yan"`
-	ZongGe       int    `xorm:"zong_ge"`
-	ZongDaYan    string `xorm:"zong_da_yan"`
-	ZongLucky    bool   `xorm:"zong_lucky"`
-	ZongSex      bool   `xorm:"zong_sex"`
-	ZongMax      bool   `xorm:"zong_max"`
+	ID            string `xorm:"id pk"`
+	LastStroke1   int    `xorm:"last_stroke_1"`
+	LastStroke2   int    `xorm:"last_stroke_2"`
+	FirstStroke1  int    `xorm:"first_stroke_1"`
+	FirstStroke2  int    `xorm:"first_stroke_2"`
+	TianGe        int    `xorm:"tian_ge"`
+	TianDaYan     string `xorm:"tian_da_yan"`
+	RenGe         int    `xorm:"ren_ge"`
+	RenDaYan      string `xorm:"ren_da_yan"`
+	DiGe          int    `xorm:"di_ge"`
+	DiDaYan       string `xorm:"di_da_yan"`
+	WaiGe         int    `xorm:"wai_ge"`
+	WaiDaYan      string `xorm:"wai_da_yan"`
+	ZongGe        int    `xorm:"zong_ge"`
+	ZongDaYan     string `xorm:"zong_da_yan"`
+	ZongLucky     bool   `xorm:"zong_lucky"`
+	NeutralGender bool   `xorm:"zong_sex"`
+	ZongMax       bool   `xorm:"zong_max"`
 }
 
 // BeforeInsert ...
@@ -198,24 +198,24 @@ func initWuGe(lucky chan<- *WuGeLucky) {
 				for f2 := 1; f2 <= WuGeMax; f2++ {
 					wuge = CalcWuGe(l1, l2, f1, f2)
 					lucky <- &WuGeLucky{
-						ID:           "",
-						LastStroke1:  l1,
-						LastStroke2:  l2,
-						FirstStroke1: f1,
-						FirstStroke2: f2,
-						TianGe:       wuge.tianGe,
-						TianDaYan:    GetDaYan(wuge.tianGe).Lucky,
-						RenGe:        wuge.renGe,
-						RenDaYan:     GetDaYan(wuge.renGe).Lucky,
-						DiGe:         wuge.diGe,
-						DiDaYan:      GetDaYan(wuge.diGe).Lucky,
-						WaiGe:        wuge.waiGe,
-						WaiDaYan:     GetDaYan(wuge.waiGe).Lucky,
-						ZongGe:       wuge.zongGe,
-						ZongDaYan:    GetDaYan(wuge.zongGe).Lucky,
-						ZongLucky:    wuge.Check(),
-						ZongSex:      isFemale(wuge.zongGe, wuge.waiGe, wuge.renGe, wuge.diGe),
-						ZongMax:      GetDaYan(wuge.zongGe).IsBestPoint(),
+						ID:            "",
+						LastStroke1:   l1,
+						LastStroke2:   l2,
+						FirstStroke1:  f1,
+						FirstStroke2:  f2,
+						TianGe:        wuge.tianGe,
+						TianDaYan:     GetDaYan(wuge.tianGe).Lucky,
+						RenGe:         wuge.renGe,
+						RenDaYan:      GetDaYan(wuge.renGe).Lucky,
+						DiGe:          wuge.diGe,
+						DiDaYan:       GetDaYan(wuge.diGe).Lucky,
+						WaiGe:         wuge.waiGe,
+						WaiDaYan:      GetDaYan(wuge.waiGe).Lucky,
+						ZongGe:        wuge.zongGe,
+						ZongDaYan:     GetDaYan(wuge.zongGe).Lucky,
+						ZongLucky:     wuge.Check(),
+						NeutralGender: isFemale(wuge.zongGe, wuge.waiGe, wuge.renGe, wuge.diGe),
+						ZongMax:       GetDaYan(wuge.zongGe).IsBestPoint(),
 					}
 				}
 			}

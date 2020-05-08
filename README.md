@@ -101,7 +101,7 @@ Reference of Zhou Yi Trigrams Code:
 > ䷠ ䷡ ䷢ ䷣ ䷤ ䷥ ䷦ ䷧ ䷨ ䷩ ䷪ ䷫ ䷬ ䷭ ䷮ ䷯
 > ䷰ ䷱ ䷲ ䷳ ䷴ ䷵ ䷶ ䷷ ䷸ ䷹ ䷺ ䷻ ䷼ ䷽ ䷾ ䷿
 
-[Bagua](https://en.wikipedia.org/wiki/Bagua)(八卦)
+[Trigram](https://en.wikipedia.org/wiki/Bagua)(八卦)
 > ☰ ☱ ☲ ☳ ☴ ☵ ☶ ☷
 
 [Four Symbols](https://en.wikipedia.org/wiki/Four_Symbols)(四象)

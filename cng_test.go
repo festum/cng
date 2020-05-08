@@ -11,11 +11,11 @@ import (
 
 func TestFate_RunMakeName(t *testing.T) {
 	born := chronos.New("2020/02/06 15:45").Solar().Time()
-	last := "張"
+	last := "秦"
 	cfg := config.DefaultConfig()
-	cfg.BaguaFilter = true
-	cfg.ZodiacFilter = true
-	cfg.SupplyFilter = true
+	cfg.TrigramFilterEnabled = true
+	cfg.ZodiacFilterEnabled = true
+	cfg.SupplyFilterEnabled = true
 	cfg.HardFilter = true
 	cfg.StrokeMin = 3
 	cfg.StrokeMax = 24

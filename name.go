@@ -12,8 +12,8 @@ type Name struct {
 	FirstName   []*Character //名姓
 	LastName    []*Character
 	born        *chronos.Calendar
-	baZi        *BaZi
-	baGua       *yi.Yi //周易八卦
+	eightChars  *BaZi
+	trigram     *yi.Yi //周易八卦
 	zodiac      *Zodiac
 	zodiacPoint int
 }
@@ -53,19 +53,19 @@ func (n Name) PinYin() string {
 	return s
 }
 
-func (n Name) WuXing() string {
+func (n Name) FiveElements() string {
 	var s string
 	for _, l := range n.LastName {
-		s += l.WuXing
+		s += l.FiveElements
 	}
 	for _, f := range n.FirstName {
-		s += f.WuXing
+		s += f.FiveElements
 	}
 	return s
 }
 
 func (n Name) XiYongShen() string {
-	return n.baZi.XiYongShen()
+	return n.eightChars.XiYongShen()
 }
 
 func createName(impl *fateImpl, f1 *Character, f2 *Character) *Name {
@@ -82,20 +82,20 @@ func createName(impl *fateImpl, f1 *Character, f2 *Character) *Name {
 	}
 }
 
-func (n *Name) BaGua() *yi.Yi {
-	if n.baGua == nil {
+func (n *Name) Trigram() *yi.Yi {
+	if n.trigram == nil {
 		lastSize := len(n.LastName)
 		shang := getStroke(n.LastName[0])
 		if lastSize > 1 {
 			shang += getStroke(n.LastName[1])
 		}
 		xia := getStroke(n.FirstName[0]) + getStroke(n.FirstName[1])
-		n.baGua = yi.NumberQiGua(xia, shang, shang+xia)
+		n.trigram = yi.NumberQiGua(xia, shang, shang+xia)
 	}
 
-	return n.baGua
+	return n.trigram
 }
 
 func (n Name) BaZi() string {
-	return n.baZi.String()
+	return n.eightChars.String()
 }

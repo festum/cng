@@ -71,7 +71,7 @@ var dizhi = []map[string][]int{
 	},
 }
 
-var wuXingTianGan = map[string]string{
+var heavenlyStemToFiveElement = map[string]string{
 	"甲": "木",
 	"乙": "木",
 	"丙": "火",
@@ -84,7 +84,7 @@ var wuXingTianGan = map[string]string{
 	"癸": "水",
 }
 
-var wuXingDiZhi = map[string]string{
+var earthlyBranchToFiveElement = map[string]string{
 	"子": "水",
 	"醜": "土",
 	"寅": "木",
@@ -99,46 +99,46 @@ var wuXingDiZhi = map[string]string{
 	"亥": "水",
 }
 
-//WuXingTianGan 五行天干
-func WuXingTianGan(s string) string {
-	return wuXingTianGan[s]
+//GetFiveElementByHeavenlyStem 五行天干 10 days as a circle
+func GetFiveElementByHeavenlyStem(s string) string {
+	return heavenlyStemToFiveElement[s]
 }
 
-//WuXingDiZhi 五行地支
-func WuXingDiZhi(s string) string {
-	return wuXingDiZhi[s]
+//GetFiveElementByEarthlyBranch 五行地支
+func GetFiveElementByEarthlyBranch(s string) string {
+	return earthlyBranchToFiveElement[s]
 }
 
 // BaZi ...
 type BaZi struct {
-	baZi   []string
-	wuXing []string
-	xiyong *XiYong
+	eightChars []string
+	fiveEles   []string
+	xiyong     *XiYong
 }
 
 //NewBazi 建立八字
 func NewBazi(calendar chronos.Calendar) *BaZi {
 	ec := calendar.Lunar().EightCharacter()
 	return &BaZi{
-		baZi:   ec,
-		wuXing: baziToWuXing(ec),
+		eightChars: ec,
+		fiveEles:   baziToWuXing(ec),
 	}
 }
 
 // String ...
 func (z *BaZi) String() string {
-	return strings.Join(z.baZi, "")
+	return strings.Join(z.eightChars, "")
 }
 
 //RiZhu 日主
 func (z *BaZi) RiZhu() string {
-	return z.baZi[4]
+	return z.eightChars[4]
 }
 
 func (z *BaZi) calcXiYong() {
 	z.xiyong = &XiYong{}
 	//TODO:need fix
-	z.point().calcSimilar().calcHeterogeneous() //.yongShen().xiShen()
+	z.score().calcSimilar().calcHeterogeneous() //.yongShen().xiShen()
 }
 
 //XiYong 喜用神
@@ -154,35 +154,15 @@ func (z *BaZi) XiYongShen() string {
 	return z.XiYong().Shen()
 }
 
-//func (z *BaZi) yongShen() *BaZi {
-//	z.xiyong.YongShen = z.xiyong.Similar[0]
-//	return z
-//}
-//func (z *BaZi) xiShen() *BaZi {
-//	rt := sheng
-//	if z.QiangRuo() {
-//		rt = ke
-//	}
-//	for i := range rt {
-//		if rt[i] == z.xiyong.YongShen {
-//			if i == len(rt) {
-//				i = -1
-//			}
-//			z.xiyong.XiShen = rt[i-1]
-//			break
-//		}
-//	}
-//	return z
-//}
-func (z *BaZi) point() *BaZi {
-	di := diIndex[z.baZi[3]]
-	for idx, v := range z.baZi {
+func (z *BaZi) score() *BaZi {
+	di := diIndex[z.eightChars[3]]
+	for idx, v := range z.eightChars {
 		if idx%2 == 0 {
-			z.xiyong.AddFen(WuXingTianGan(v), tiangan[di][tianIndex[v]])
+			z.xiyong.AddFiveElementsScore(GetFiveElementByHeavenlyStem(v), tiangan[di][tianIndex[v]])
 		} else {
 			dz := dizhi[diIndex[v]]
 			for k := range dz {
-				z.xiyong.AddFen(WuXingTianGan(k), dz[k][di])
+				z.xiyong.AddFiveElementsScore(GetFiveElementByHeavenlyStem(k), dz[k][di])
 			}
 		}
 	}
@@ -193,9 +173,9 @@ func baziToWuXing(bazi []string) []string {
 	var wx []string
 	for idx, v := range bazi {
 		if idx%2 == 0 {
-			wx = append(wx, WuXingTianGan(v))
+			wx = append(wx, GetFiveElementByHeavenlyStem(v))
 		} else {
-			wx = append(wx, WuXingDiZhi(v))
+			wx = append(wx, GetFiveElementByEarthlyBranch(v))
 		}
 	}
 	return wx
@@ -204,16 +184,16 @@ func baziToWuXing(bazi []string) []string {
 //計算同類
 func (z *BaZi) calcSimilar() *BaZi {
 	for i := range sheng {
-		if wuXingTianGan[z.RiZhu()] == sheng[i] {
+		if heavenlyStemToFiveElement[z.RiZhu()] == sheng[i] {
 			z.xiyong.Similar = append(z.xiyong.Similar, sheng[i])
-			z.xiyong.SimilarPoint = z.xiyong.GetFen(sheng[i])
+			z.xiyong.SimilarScore = z.xiyong.GetFiveElementsScore(sheng[i])
 			if i == 0 {
 				i = len(sheng) - 1
 				z.xiyong.Similar = append(z.xiyong.Similar, sheng[i])
-				z.xiyong.SimilarPoint += z.xiyong.GetFen(sheng[i])
+				z.xiyong.SimilarScore += z.xiyong.GetFiveElementsScore(sheng[i])
 			} else {
 				z.xiyong.Similar = append(z.xiyong.Similar, sheng[i-1])
-				z.xiyong.SimilarPoint += z.xiyong.GetFen(sheng[i-1])
+				z.xiyong.SimilarScore += z.xiyong.GetFiveElementsScore(sheng[i-1])
 			}
 			break
 		}
@@ -230,7 +210,7 @@ func (z *BaZi) calcHeterogeneous() *BaZi {
 			}
 		}
 		z.xiyong.Heterogeneous = append(z.xiyong.Heterogeneous, sheng[i])
-		z.xiyong.HeterogeneousPoint += z.xiyong.GetFen(sheng[i])
+		z.xiyong.HeterogeneousScore += z.xiyong.GetFiveElementsScore(sheng[i])
 	EndSimilar:
 		continue
 
