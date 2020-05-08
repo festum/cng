@@ -5,12 +5,13 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/festum/chronos"
 	"github.com/festum/cng"
 	"github.com/festum/cng/config"
 	"github.com/goextension/log"
 	"github.com/spf13/cobra"
 )
+
+const _dateFormat = "2006/01/02 15:04"
 
 func cmdName() *cobra.Command {
 	path := ""
@@ -25,7 +26,7 @@ func cmdName() *cobra.Command {
 			config.DefaultJSONPath = path
 			cfg := config.LoadConfig()
 			fmt.Printf("config loaded: %+v", cfg)
-			bornTime, e := time.Parse(chronos.DateFormat, born)
+			bornTime, e := time.Parse(_dateFormat, born)
 			if e != nil {
 				log.Fatalw("parseborn", "error", e)
 			}
@@ -40,8 +41,8 @@ func cmdName() *cobra.Command {
 		},
 	}
 	cmd.Flags().StringVarP(&last, "last", "l", "", "set lastname")
-	cmd.Flags().StringVarP(&born, "born", "b", time.Now().Format(chronos.DateFormat), "set birth as 2016/01/02 15:04")
+	cmd.Flags().StringVarP(&born, "born", "b", time.Now().Format(_dateFormat), "set birth as 2016/01/02 15:04")
 	cmd.Flags().StringVarP(&path, "path", "p", ".", "set the input path")
-	cmd.Flags().BoolVarP(&gender, "gender", "s", false, "set baby gender")
+	cmd.Flags().IntVarP(&gender, "gender", "s", 0, "set baby gender")
 	return cmd
 }
